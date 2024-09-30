@@ -11,6 +11,7 @@
             padding: 0;
             height: 100%;
             display: flex;
+            flex-direction: column; /* 縦方向に並べる */
             justify-content: center;
             align-items: center;
             background-color: #f9f9f9;
@@ -46,7 +47,7 @@
             position: absolute;
         }
 
-        #startButton {
+        #startButton, #termsButton {
             padding: 15px 30px;
             font-size: 1.5em;
             background-color: #808080; /* 背景色を灰色に変更 */
@@ -55,9 +56,10 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin: 10px; /* ボタンのマージン */
         }
 
-        #startButton:hover {
+        #startButton:hover, #termsButton:hover {
             background-color: #666666; /* ホバー時の色 */
         }
 
@@ -93,6 +95,29 @@
 
         #fontSelect, #textColorInput, #bgColorInput, #shadowColorInput {
             margin-top: 10px; /* マージンを追加 */
+        }
+
+        #termsModal {
+            display: none; /* 初期状態で非表示 */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #333;
+            padding: 20px;
+            z-index: 10; /* モーダルを前面に表示 */
+        }
+
+        .modalOverlay {
+            display: none; /* 初期状態で非表示 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明の背景 */
+            z-index: 5; /* 背景を後ろに表示 */
         }
 
         /* デスクトップ版 */
@@ -145,6 +170,13 @@
         .snsButton:hover {
             background-color: #e0e0e0; /* ホバー時の色 */
         }
+
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 0.8em; /* フォントサイズを小さく */
+            color: gray; /* 灰色に設定 */
+        }
     </style>
 </head>
 <body>
@@ -152,6 +184,7 @@
 <div id="startScreen">
     <h1>A game where the number just increases by one when you click once</h1>
     <button id="startButton">スタート</button>
+    <button id="termsButton">利用規約</button>
 </div>
 
 <div id="mainContainer">
@@ -189,6 +222,19 @@
     <button class="snsButton" onclick="window.open('https://www.pixiv.net/users/104662345', '_blank')">Pixiv</button>
 </div>
 
+<!-- 利用規約モーダル -->
+<div class="modalOverlay" id="modalOverlay"></div>
+<div id="termsModal">
+    <h2>利用規約</h2>
+    <p>このサイトは無料で誰でも使えます。<br>
+    誰のものでもありません。<br>
+    配信や動画などへの利用も可。<br>
+    作者:ChatGPT</p>
+    <button id="closeTermsButton">閉じる</button>
+</div>
+
+<div id="footer">no copyright</div>
+
 <script>
     let count = 0;
     let resetCount = 0; // リセットボタンの押下回数をカウント
@@ -203,12 +249,34 @@
     const mainContainer = document.getElementById('mainContainer');
     const startScreen = document.getElementById('startScreen');
     const startButton = document.getElementById('startButton');
+    const termsButton = document.getElementById('termsButton');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const termsModal = document.getElementById('termsModal');
+    const closeTermsButton = document.getElementById('closeTermsButton');
     const embeddedContent = document.getElementById('embeddedContent');
 
     // スタートボタンのクリックイベント
     startButton.addEventListener('click', function() {
         startScreen.style.display = 'none'; // スタート画面を非表示
         mainContainer.style.display = 'flex'; // メインコンテナを表示
+    });
+
+    // 利用規約ボタンのクリックイベント
+    termsButton.addEventListener('click', function() {
+        modalOverlay.style.display = 'block'; // モーダルのオーバーレイを表示
+        termsModal.style.display = 'block'; // モーダルを表示
+    });
+
+    // モーダルの閉じるボタン
+    closeTermsButton.addEventListener('click', function() {
+        modalOverlay.style.display = 'none'; // モーダルのオーバーレイを非表示
+        termsModal.style.display = 'none'; // モーダルを非表示
+    });
+
+    // オーバーレイをクリックしたときにモーダルを閉じる
+    modalOverlay.addEventListener('click', function() {
+        modalOverlay.style.display = 'none'; // モーダルのオーバーレイを非表示
+        termsModal.style.display = 'none'; // モーダルを非表示
     });
 
     // 画面をクリックしたときの処理
