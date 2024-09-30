@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A game where the number just increases by one when you click once</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mobo+Bold&display=swap" rel="stylesheet"> <!-- フォントのインポート -->
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            font-family: 'Mobo Bold', sans-serif; /* フォントの指定 */
+            color: #333;
+        }
+
+        #mainContainer {
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            display: none; /* 初期状態で非表示 */
+        }
+
+        #counter {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        #startScreen {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        #startButton {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            background-color: #808080; /* 背景色を灰色に変更 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #startButton:hover {
+            background-color: #666666; /* ホバー時の色 */
+        }
+
+        button, select, input[type="text"] {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s; /* ボタンのエフェクト */
+        }
+
+        button:hover, select:hover, input[type="text"]:hover {
+            background-color: #e0e0e0;
+        }
+
+        input[type="text"] {
+            width: 150px; /* テキストボックスの幅 */
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff; /* フォーカス時のボーダー色 */
+        }
+
+        #buttonContainer {
+            display: flex; /* 横並びにするためにflexboxを使用 */
+            gap: 5px; /* ボタン間の隙間 */
+        }
+
+        #fontSelect, #textColorInput, #bgColorInput, #shadowColorInput {
+            margin-top: 10px; /* マージンを追加 */
+        }
+
+        /* デスクトップ版 */
+        @media (min-width: 768px) {
+            #embeddedContent {
+                position: absolute;
+                left: 0; /* 左側に配置 */
+                top: 50%;
+                transform: translateY(-50%); /* 垂直中央に配置 */
+                width: 300px; /* 幅を指定 */
+                height: 100%; /* 高さを100%に */
+            }
+
+            #snsButtons {
+                position: absolute;
+                right: 20px; /* 右側に配置 */
+                top: 20px; /* 上部に配置 */
+                display: flex;
+                flex-direction: column; /* 縦並びにする */
+                gap: 10px; /* ボタン間の隙間 */
+            }
+        }
+
+        /* スマホ版 */
+        @media (max-width: 767px) {
+            #embeddedContent {
+                margin-top: 20px; /* インターフェースの下に配置 */
+                width: 100%;
+                height: 300px; /* 高さを指定 */
+            }
+
+            #snsButtons {
+                position: relative;
+                margin-top: 20px; /* インターフェースの下に配置 */
+                display: flex;
+                justify-content: center; /* 中央揃え */
+                gap: 10px; /* ボタン間の隙間 */
+            }
+        }
+
+        .snsButton {
+            padding: 10px 15px; /* パディングを追加 */
+            background-color: transparent; /* 背景色を透明に */
+            border: none; /* ボーダーを消す */
+            color: #333; /* テキストの色 */
+            cursor: pointer; /* カーソルをポインターに */
+            font-size: 1em; /* フォントサイズ */
+        }
+
+        .snsButton:hover {
+            background-color: #e0e0e0; /* ホバー時の色 */
+        }
+    </style>
+</head>
+<body>
+
+<div id="startScreen">
+    <h1>A game where the number just increases by one when you click once</h1>
+    <button id="startButton">スタート</button>
+</div>
+
+<div id="mainContainer">
+    <div id="counter">0</div>
+    
+    <!-- ボタンを横並びにするためのコンテナ -->
+    <div id="buttonContainer">
+        <button id="resetButton">R</button>
+        <button id="increaseFontButton">+</button>
+        <button id="decreaseFontButton">-</button>
+    </div>
+
+    <!-- フォント選択ドロップダウン -->
+    <select id="fontSelect">
+        <option value="sans-serif">ゴシック</option>
+        <option value="serif">明朝</option>
+        <option value="Kai">楷書</option>
+        <option value="cursive">筆記</option>
+    </select>
+
+    <!-- 文字色、背景色、影色の入力ボックス -->
+    <input type="text" id="textColorInput" placeholder="文字色 (#FFFFFF)">
+    <input type="text" id="bgColorInput" placeholder="背景色 (#FFFFFF)">
+    <input type="text" id="shadowColorInput" placeholder="影色 (#000000)">
+</div>
+
+<!-- 埋め込むコンテンツ -->
+<iframe id="embeddedContent" src="https://x.com/a151____" frameborder="0"></iframe>
+
+<!-- SNSボタンのコンテナ -->
+<div id="snsButtons">
+    <button class="snsButton" onclick="window.open('https://x.com/a151____', '_blank')">X</button>
+    <button class="snsButton" onclick="window.open('https://www.youtube.com/@a151-numverse', '_blank')">YouTube</button>
+    <button class="snsButton" onclick="window.open('https://www.nicovideo.jp/user/132529161', '_blank')">NicoVideo</button>
+    <button class="snsButton" onclick="window.open('https://www.pixiv.net/users/104662345', '_blank')">Pixiv</button>
+</div>
+
+<script>
+    let count = 0;
+    let resetCount = 0; // リセットボタンの押下回数をカウント
+    const counterDisplay = document.getElementById('counter');
+    const resetButton = document.getElementById('resetButton');
+    const increaseFontButton = document.getElementById('increaseFontButton');
+    const decreaseFontButton = document.getElementById('decreaseFontButton');
+    const fontSelect = document.getElementById('fontSelect');
+    const textColorInput = document.getElementById('textColorInput');
+    const bgColorInput = document.getElementById('bgColorInput');
+    const shadowColorInput = document.getElementById('shadowColorInput');
+    const mainContainer = document.getElementById('mainContainer');
+    const startScreen = document.getElementById('startScreen');
+    const startButton = document.getElementById('startButton');
+    const embeddedContent = document.getElementById('embeddedContent');
+
+    // スタートボタンのクリックイベント
+    startButton.addEventListener('click', function() {
+        startScreen.style.display = 'none'; // スタート画面を非表示
+        mainContainer.style.display = 'flex'; // メインコンテナを表示
+    });
+
+    // 画面をクリックしたときの処理
+    document.body.addEventListener('click', function(event) {
+        if (resetCount < 10) {
+            count++;
+            counterDisplay.textContent = count; // 数字を増やす
+        } else {
+            count--;
+            counterDisplay.textContent = count; // 数字を減らす
+        }
+    });
+
+    // リセットボタンの処理
+    resetButton.addEventListener('click', function() {
+        resetCount++;
+        if (resetCount < 10) {
+            count = 0; // 数字を0にリセット
+            counterDisplay.textContent = count; // 数字を表示
+        }
+
+        // RをЯに変更
+        if (resetCount >= 10) {
+            resetButton.textContent = 'Я'; // RをЯに変更
+        }
+    });
+
+    // フォントサイズを増やす
+    increaseFontButton.addEventListener('click', function() {
+        const currentFontSize = parseFloat(window.getComputedStyle(counterDisplay).fontSize);
+        counterDisplay.style.fontSize = (currentFontSize + 5) + 'px';
+    });
+
+    // フォントサイズを減らす
+    decreaseFontButton.addEventListener('click', function() {
+        const currentFontSize = parseFloat(window.getComputedStyle(counterDisplay).fontSize);
+        counterDisplay.style.fontSize = (currentFontSize - 5) + 'px';
+    });
+
+    // フォント変更
+    fontSelect.addEventListener('change', function() {
+        counterDisplay.style.fontFamily = fontSelect.value; // フォントを変更
+    });
+
+    // 文字色変更
+    textColorInput.addEventListener('input', function() {
+        const textColor = textColorInput.value; // 文字色を取得
+        counterDisplay.style.color = textColor; // 文字色を変更
+    });
+
+    // 背景色変更
+    bgColorInput.addEventListener('input', function() {
+        document.body.style.backgroundColor = bgColorInput.value; // 背景色を変更
+    });
+
+    // 影色変更
+    shadowColorInput.addEventListener('input', function() {
+        const shadowColor = shadowColorInput.value; // 影色を取得
+        counterDisplay.style.textShadow = 
+            `2px 2px 0 ${shadowColor},
+            3px 3px 0 ${shadowColor},
+            4px 4px 0 ${shadowColor}`; // 影色を変更
+    });
+</script>
+
+</body>
+</html>
